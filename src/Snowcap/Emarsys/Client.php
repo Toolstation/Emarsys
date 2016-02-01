@@ -49,7 +49,7 @@ class Client
     /**
      * @var array
      */
-    private $systemFields = array('key_id', 'id', 'contacts');
+    private $systemFields = array('key_id', 'id', 'contacts', 'uid');
 
     /**
      * @param HttpClient $client HTTP client implementation
@@ -257,8 +257,22 @@ class Client
                 $contact = $this->mapFieldsToIds($contact);
             }
         }
-        
+
         return $this->send(HttpClient::PUT, 'contact', $this->mapFieldsToIds($data));
+    }
+
+    /**
+     * Deleted one contact, identified by an external ID.
+     *	key_id and id must be set in data
+     *
+     * @param string $fieldId
+     * @param string $fieldValue
+     * @throws Exception\ClientException
+     * @return Response
+     */
+    public function deleteContact($data)
+    {
+        return $this->send(HttpClient::POST, 'contact/delete', $this->mapFieldsToIds($data));
     }
 
     /**
@@ -632,6 +646,20 @@ class Client
     public function getSegments(array $data)
     {
         return $this->send(HttpClient::GET, 'filter', $data);
+    }
+
+    /**
+     * Returns a list of contacts within a segment.
+     *
+     * @param int $fieldValue
+     * @param int $offset
+     * @param int $limit
+     *
+     * @return Response
+     */
+    public function getContactsInSegment($fieldValue, $offset = 0, $limit = 1000000)
+    {
+        return $this->send(HttpClient::GET, sprintf('filter/%s/contacts/offset=%d&limit=%d', $fieldValue, $offset, $limit));
     }
 
     /**
