@@ -213,6 +213,17 @@ class Client
     }
 
     /**
+     * Returns settings - Useful for monitoring number of contacts
+     *
+     * @param array $data
+     * @return Response
+     */
+    public function getSettings()
+    {
+    	return $this->send(HttpClient::GET, 'settings', array());
+    }
+
+    /**
      * Returns a list of condition rules.
      *
      * @return Response
@@ -240,7 +251,7 @@ class Client
 	        $contact = $this->mapFieldsToIds($contact);
 	    }
         }
-    	
+
         return $this->send(HttpClient::POST, 'contact', $this->mapFieldsToIds($data));
     }
 
@@ -725,7 +736,7 @@ class Client
     {
         return $this->send(HttpClient::POST, 'source/create', $data);
     }
-    
+
     /**
     * creates custom field in your Emarsys account
     *
@@ -737,7 +748,7 @@ class Client
     public function createCustomField($name, $type){
 	return $this->send(HttpClient::POST, 'field', array('name'=>$name, 'application_type'=>$type));
     }
-    
+
     /**
      * @param string $method
      * @param string $uri
